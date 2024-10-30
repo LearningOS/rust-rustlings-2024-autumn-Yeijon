@@ -33,7 +33,7 @@ mod tests {
 
     #[test]
     fn test_vec_loop() {
-        let v: Vec<i32> = (1..).filter(|x| x % 2 == 0).take(5).collect();
+        let v: Vec<i32> = (1..).filter(|x| x % 2 == 0).take(5).collect(); // v: [2, 4, 6, 8, 10]
         let ans = vec_loop(v.clone());
 
         assert_eq!(ans, v.iter().map(|x| x * 2).collect::<Vec<i32>>());
