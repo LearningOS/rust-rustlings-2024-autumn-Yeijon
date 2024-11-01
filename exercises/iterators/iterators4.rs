@@ -15,7 +15,54 @@ pub fn factorial(num: u64) -> u64 {
     // For an extra challenge, don't use:
     // - recursion
     // Execute `rustlings hint iterators4` for hints.
+    let mut sum: u64 = 1;
+    while num > 0 {
+        match num {
+            1 => 1,
+            _ => {
+                sum *= num;
+                num -= 1;
+            }
+        }
+    }
+    sum
 }
+
+// NOTE: 实现factorial的方式大全
+
+fn factorial1(n: u64) -> u64 {
+    match n {
+        0 => 1,
+        _ => n * factorial1(n-1),
+    }
+}
+
+fn factorial2(n: u64) -> u64 {
+    fn fact_acc(n: u64, acc: u64) -> u64 {
+        match n {
+            0 => acc,
+            _ => fact_acc(n-1, n * acc),
+        }
+    }
+    fact_acc(n,1)
+}
+
+fn factorial3(n: u64) -> u64 {
+    let mut sum = 1;
+    for i in 2..=n {
+        sum *= i;
+    }
+    result
+}
+
+fn factorial4(n: u64) -> u64 {
+    (1..=n).fold(1, |acc, x| acc * x)
+}
+
+fn factorial5(n: u64) -> u64 {
+    (1..=n).product()
+}
+
 
 #[cfg(test)]
 mod tests {
