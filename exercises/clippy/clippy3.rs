@@ -7,16 +7,15 @@
 
 #[allow(unused_variables, unused_assignments)]
 fn main() {
-    let my_option: Option<()> = Some(1);
-    // if matches! (my_optionn None) {
-    // }
+    let my_option: Option<()> = None;
+    
     let my_arr = &[
         -1, -2, -3,
-        -4, -5, -6,
+        -4, -5, -6
     ];
     println!("My array! Here it is: {:?}", my_arr);
 
-    let my_empty_vec: std::vec::Vec<_> = vec![];
+    let my_empty_vec: Vec<i32> = Vec::new();
     println!("This Vec is empty, see? {:?}", my_empty_vec);
 
     let mut value_a = 45;
