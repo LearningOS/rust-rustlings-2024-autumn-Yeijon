@@ -49,9 +49,70 @@ enum ParsePersonError {
 // you want to return a string error message, you can do so via just using
 // return `Err("my error message".into())`.
 
+// impl FromStr for Person {
+//     type Err = ParsePersonError;
+//     fn from_str(s: &str) -> Result<Person, Self::Err> {
+//         let (name, age) = match s.split_once(',') {
+//             Some((name, age)) if !name.is_empty() && !age.is_empty() => (name.to_string(), age),
+//             Some((_, _)) => return Err(ParsePersonError::Empty),
+//             None => return Err(ParsePersonError::BadLen),
+//         };
+//         let age = age.parse().map_err(ParsePersonError::ParseInt)?;
+
+//         Ok(Person {name, age})
+//     }
+// }
+
+// impl FromStr for Person {
+//     type Err = ParsePersonError;
+//     fn from_str(s: &str) -> Result<Person, Self::Err> {
+//         if s.is_empty() {
+//             return Err(ParsePersonError::Empty);
+//         }
+
+//         let (name, age) = match s.split_once(',') {
+//             Some((name, age)) => (name.to_string(), age.to_string()),
+//             None => return Err(ParsePersonError::BadLen),
+//         };
+
+//         if name.is_empty() {
+//             return Err(ParsePersonError::NoName);
+//         }
+
+//         let age = age.trim();
+//         let age = match age.parse() {
+//             Ok(age) => age,
+//             Err(err) => return Err(ParsePersonError::ParseInt(err)),
+//         };
+
+//         Ok(Person { name, age })
+//     }
+// }
+
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.is_empty() {
+            return Err(ParsePersonError::Empty);
+        }
+
+        let parts: Vec<&str> = s.split(',').collect();
+        if parts.len() != 2 {
+            return Err(ParsePersonError::BadLen);
+        }
+
+        let name = parts[0].to_string();
+        if name.is_empty() {
+            return Err(ParsePersonError::NoName);
+        }
+
+        let age = parts[1].trim();
+        let age = match age.parse() {
+            Ok(age) => age,
+            Err(err) => return Err(ParsePersonError::ParseInt(err)),
+        };
+
+        Ok(Person { name, age })
     }
 }
 
