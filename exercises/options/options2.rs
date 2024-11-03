@@ -3,7 +3,6 @@
 // Execute `rustlings hint options2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 #[cfg(test)]
 mod tests {
@@ -35,20 +34,24 @@ mod tests {
         // xTODO: make this a while let statement - remember that vector.pop also
         // adds another layer of Option<T>. You can stack `Option<T>`s into
         // while let and if let.
-        while let Some(integer) = optional_integers.pop() {
+
+        /*
+            * 我们使用 `while let Some(Some(integer)) = optional_integers.pop()` 来同时解构 `optional_integers.pop()` 返回的 `Option<Option<i8>>` 类型。
+         */
+        while let Some(Some(integer)) = optional_integers.pop() {
             assert_eq!(integer, cursor);
             cursor -= 1;
         }
 
-        loop {
-            match optional_integers.pop() {
-                Some(integer) => {
-                    assert_eq!(integer, cursor);
-                    cursor -= 1;
-                }
-                None => break,
-            }
-        }
+        // loop {
+        //     match optional_integers.pop() {
+        //         Some(integer) => {
+        //             assert_eq!(integer, Some(cursor));
+        //             cursor -= 1;
+        //         }
+        //         None => break,
+        //     }
+        // }
 
         // integer = optional_integers.pop() {
         //     assert_eq!(integer, cursor);

@@ -31,7 +31,6 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -58,7 +57,6 @@ enum ParsePersonError {
 //             None => return Err(ParsePersonError::BadLen),
 //         };
 //         let age = age.parse().map_err(ParsePersonError::ParseInt)?;
-
 //         Ok(Person {name, age})
 //     }
 // }
@@ -69,22 +67,18 @@ enum ParsePersonError {
 //         if s.is_empty() {
 //             return Err(ParsePersonError::Empty);
 //         }
-
 //         let (name, age) = match s.split_once(',') {
 //             Some((name, age)) => (name.to_string(), age.to_string()),
 //             None => return Err(ParsePersonError::BadLen),
 //         };
-
 //         if name.is_empty() {
 //             return Err(ParsePersonError::NoName);
 //         }
-
 //         let age = age.trim();
 //         let age = match age.parse() {
 //             Ok(age) => age,
 //             Err(err) => return Err(ParsePersonError::ParseInt(err)),
 //         };
-
 //         Ok(Person { name, age })
 //     }
 // }
