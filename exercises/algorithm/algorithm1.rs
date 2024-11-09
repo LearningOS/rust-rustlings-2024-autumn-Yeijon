@@ -50,6 +50,7 @@ impl<T> LinkedList<T> {
         let node_ptr = Some(unsafe { NonNull::new_unchecked(Box::into_raw(node)) });
         match self.end {
             None => self.start = node_ptr,
+            // * `end_ptr.as_ptr()` 将 `NonNull<Node<T>>` 转换为裸指针 `*mut Node<T>`
             Some(end_ptr) => unsafe { (*end_ptr.as_ptr()).next = node_ptr },
         }
         self.end = node_ptr;
@@ -70,14 +71,54 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where
+        T: PartialOrd + Clone
 	{
 		//TODO
 		Self {
             length: 0,
             start: None,
             end: None,
+        };
+        let mut merged_list = LinkedList::new();
+        let mut a_ptr = list_a.start;
+        let mut b_ptr = list_b.start;
+        while a_ptr.is_some() && b_ptr.is_some() {
+            unsafe {
+                let a_node = a_ptr.unwrap().as_ptr();
+                let b_node = b_ptr.unwrap().as_ptr();
+                if (*a_node).val <= (*b_node).val {
+                    merged_list.add((*a_node).val.clone());
+                    merged_list.length += 1;
+                    a_ptr = (*a_node).next;
+                } else {
+                    merged_list.add((*b_node).val.clone());
+                    merged_list.length += 1;
+                    b_ptr = (*b_node).next;
+                }
+            }
         }
-	}
+        
+        while a_ptr.is_some() {
+            unsafe {
+                let a_node = a_ptr.unwrap().as_ptr();
+                    merged_list.add((*a_node).val.clone());
+                    merged_list.length += 1;
+                    a_ptr = (*a_node).next;
+            }
+        }
+
+        while b_ptr.is_some() {
+            unsafe {
+                let b_node = b_ptr.unwrap().as_ptr();
+                    merged_list.add((*b_node).val.clone());
+                    merged_list.length += 1;
+                    b_ptr = (*b_node).next;
+            }
+        }
+
+        merged_list
+    }
 }
 
 impl<T> Display for LinkedList<T>

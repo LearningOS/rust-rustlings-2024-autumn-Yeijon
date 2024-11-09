@@ -41,7 +41,7 @@ where
 
 impl<T> BinarySearchTree<T>
 where
-    T: Ord,
+    T: Ord + Clone,
 {
 
     fn new() -> Self {
@@ -51,22 +51,52 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        if self.root.is_none() {
+            let node = TreeNode::new(value.clone());
+            self.root = Some(Box::new(node));
+        }
+        self.root.as_mut().unwrap().insert(value);
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        let mut cur = self.root.as_ref();
+        while let Some(node) = cur {
+            match value.cmp(&node.value) {
+            // 目标节点在 cur 的右子树中
+                Ordering::Greater => cur = node.right.as_ref(),
+            // 目标节点在 cur 的左子树中
+                Ordering::Less => cur = node.left.as_ref(),
+            // 找到目标节点，跳出循环
+                Ordering::Equal => return true,
+            }
+        }  
+        false
+
     }
 }
 
 impl<T> TreeNode<T>
 where
-    T: Ord,
+    T: Ord + Clone,
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        if value < self.value {
+            if self.left.is_none() {
+                self.left = Some(Box::new(TreeNode::new(value)));
+            } else {
+                self.left.as_mut().unwrap().insert(value);
+            }
+        } else if value > self.value {
+            if self.right.is_none() {
+                self.right = Some(Box::new(TreeNode::new(value)));
+            } else {
+                self.right.as_mut().unwrap().insert(value);
+            }
+        }
     }
 }
 
@@ -122,5 +152,6 @@ mod tests {
         }
     }
 }    
+
 
 

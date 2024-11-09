@@ -31,13 +31,19 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T> Default for LinkedList<T> 
+where
+    T: Clone,
+{
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T> LinkedList<T> 
+where
+    T: Clone,
+{
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -74,6 +80,31 @@ impl<T> LinkedList<T> {
     }
 	pub fn reverse(&mut self){
 		// TODO
+        // * 遍历这个，然后从最后一个依次拿，添加进进的链表中
+        let mut reverse_list = LinkedList::new();
+        for i in (0..self.length).rev() {
+            let node = self.get(i as i32).unwrap();
+            reverse_list.add(node.clone());
+        }
+        // self = &reverse_list;
+        self.start = reverse_list.start;
+        self.end = reverse_list.end;
+
+        // * 另一个思路：
+        // let mut prev = None;
+        // let mut current = self.start;
+
+        // while let Some(mut node) = current {
+        //     let next = unsafe { (*node.as_ptr()).next };
+        //     unsafe {
+        //         (*node.as_ptr()).next = prev;
+        //         (*node.as_ptr()).prev = next;
+        //     }
+        //     prev = Some(node);
+        //     current = next;
+        // }
+
+        // std::mem::swap(&mut sef.start, &mut self.end);
 	}
 }
 
