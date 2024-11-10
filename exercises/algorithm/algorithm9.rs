@@ -39,22 +39,9 @@ where
     pub fn add(&mut self, value: T) {
         //TODO
         // 添加进堆底
-        self.items.push(T);
-        let mut i = self.len();
-        
-        // 与父节点对比
-        loop {
-            if i == 1 {
-                break;
-            }
-            let p = self.parent_idx(i);
-            if !self.comparator(&self.items[i], &self.items[p]) {
-                break;
-            }
-            std::mem::swap(&mut self.items[i], &mut self.items[p]);
-            i = p;
-        }
-        
+        self.items.push(value);
+        self.count += 1;
+        self.sift_up(self.count);
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -80,7 +67,7 @@ where
         let ri = self.right_child_idx(idx);
 
         if ri <= self.len() {
-            if (self.comparator(&self.items[ri], &self.items[li])) {
+            if (self.comparator)(&self.items[ri], &self.items[li]) {
                 ri
             } else {
                 li
@@ -90,6 +77,18 @@ where
         } else {
             idx
         } 
+    }
+
+      fn sift_up(&mut self, mut idx: usize) {
+        while idx > 1 {
+            let parent = self.parent_idx(idx);
+            if (self.comparator)(&self.items[idx], &self.items[parent]) {
+                self.items.swap(parent, idx);
+            } else {
+                break;
+            }
+            idx = parent;
+        }
     }
 
     fn sift_down(&mut self, mut idx: usize) {
@@ -103,7 +102,6 @@ where
             }
         }
     }
-
 }
 
 impl<T> Heap<T>
@@ -132,12 +130,11 @@ where
         if self.is_empty() {
             None
         } else {
-            let top = self.items[1].clone();
-            self.items[1] = self.items[self.count].clone();
+            let item = std::mem::take(&mut self.items[1]);
+            self.items[1] = self.items.pop().unwrap();
             self.count -= 1;
-            self.items.pop();
             self.sift_down(1);
-            Some(top)
+            Some(item)
         }
     }
 }
