@@ -30,6 +30,18 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        // Graph::add_edge(self, edge); ! 递归调用了,没有理解好继承
+        let (from, to, weight) = edge;
+        if !self.contains(from) {
+            self.add_node(from);
+        }
+        if !self.contains(to) {
+            self.add_node(to);
+        }
+
+        self.adjacency_table_mutable().get_mut(from).unwrap().push((to.to_string(), weight));
+        self.adjacency_table_mutable().get_mut(to).unwrap().push((from.to_string(), weight));
+
     }
 }
 pub trait Graph {
@@ -38,10 +50,26 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+        // ! self没有直接定义insert()方法！
+        if self.contains(node) {
+            return false;
+        }
+        
+        self.adjacency_table_mutable().insert(node.to_string(), vec![]);
+        true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        if !self.contains(edge.0) {
+            self.add_node(edge.0);
+        } else if !self.contains(edge.1) {
+            self.add_node(edge.1);
+        } else if edge.0 == edge.1 {
+            panic!("error")
+        }
+ 
+        self.adjacency_table_mutable().get_mut(edge.0).unwrap().push((edge.1.to_string(),edge.2));
+        self.adjacency_table_mutable().get_mut(edge.1).unwrap().push((edge.0.to_string(),edge.2));
     }
     fn contains(&self, node: &str) -> bool {
         self.adjacency_table().get(node).is_some()

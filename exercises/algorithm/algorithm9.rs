@@ -38,6 +38,23 @@ where
 
     pub fn add(&mut self, value: T) {
         //TODO
+        // 添加进堆底
+        self.items.push(T);
+        let mut i = self.len();
+        
+        // 与父节点对比
+        loop {
+            if i == 1 {
+                break;
+            }
+            let p = self.parent_idx(i);
+            if !self.comparator(&self.items[i], &self.items[p]) {
+                break;
+            }
+            std::mem::swap(&mut self.items[i], &mut self.items[p]);
+            i = p;
+        }
+        
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,8 +75,35 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        // * 大顶堆和小顶堆，左右节点大小顺序是相反的
+		let li = self.left_child_idx(idx);
+        let ri = self.right_child_idx(idx);
+
+        if ri <= self.len() {
+            if (self.comparator(&self.items[ri], &self.items[li])) {
+                ri
+            } else {
+                li
+            }
+        } else if li <= self.len() {
+            li
+        } else {
+            idx
+        } 
     }
+
+    fn sift_down(&mut self, mut idx: usize) {
+        while self.children_present(idx) {
+            let child = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[child], &self.items[idx]) {
+                self.items.swap(idx, child);
+                idx = child;
+            } else {
+                break;
+            }
+        }
+    }
+
 }
 
 impl<T> Heap<T>
@@ -79,13 +123,22 @@ where
 
 impl<T> Iterator for Heap<T>
 where
-    T: Default,
+    T: Default + Clone,
 {
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
         //TODO
-		None
+        if self.is_empty() {
+            None
+        } else {
+            let top = self.items[1].clone();
+            self.items[1] = self.items[self.count].clone();
+            self.count -= 1;
+            self.items.pop();
+            self.sift_down(1);
+            Some(top)
+        }
     }
 }
 

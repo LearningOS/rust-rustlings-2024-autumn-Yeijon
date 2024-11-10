@@ -29,9 +29,49 @@ impl Graph {
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
         
 		//TODO
+        // let mut visit_order = vec![]; // 遍历列表
+        // let mut visited = vec![]; 
+        // visit_order.push(start);
+        // let mut que = VecDeque::new();
 
+        // que.push_back(start);
+        // while !que.is_empty() {
+        //     let vet = que.pop_front().unwrap();
+        //     visited.push(vet);
+        //     // adj_vet: vector
+        //     if let Some(adj_vets) = self.adj.get(vet) {
+        //         for &adj_vet in adj_vets {
+        //             if visited.contains(&adj_vet) {
+        //                 continue;
+        //             }
+        //             que.push_back(adj_vet);
+        //             visit_order.push(adj_vet);
+        //         }
+        //     }
+        // }
+
+        // visit_order
+        let mut visited = vec![false; self.adj.len()];
+        let mut queue = VecDeque::new();
         let mut visit_order = vec![];
+
+        queue.push_back(start);
+        visited[start] = true;
+
+        while let Some(node) = queue.pop_front() {
+            visit_order.push(node);
+
+            for &neighbor in &self.adj[node] {
+                if !visited[neighbor] {
+                    queue.push_back(neighbor);
+                    visited[neighbor] = true;
+                }
+            }
+        }
+
         visit_order
+
+
     }
 }
 

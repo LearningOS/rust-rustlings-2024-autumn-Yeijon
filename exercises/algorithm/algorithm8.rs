@@ -56,26 +56,63 @@ pub struct myStack<T>
 {
 	//TODO
 	q1:Queue<T>,
-	q2:Queue<T>
+	q2:Queue<T>,
+    size: usize,
 }
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
 			//TODO
 			q1:Queue::<T>::new(),
-			q2:Queue::<T>::new()
+			q2:Queue::<T>::new(),
+            size: 0
         }
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+        self.q1.enqueue(elem);
+        self.size += 1;
     }
+
+    pub fn push2(&mut self, elem: T) {
+        self.q1.enqueue(elem);
+        while self.q1.size() > 1 {
+            if let Ok(front) = self.q1.dequeue() {
+                self.q2.enqueue(front);
+            }
+        }
+        std::mem::swap(&mut self.q1, &mut self.q2);
+        self.size += 1;
+    }
+
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
-		Err("Stack is empty")
+        if self.size == 0 {
+		    Err("Stack is empty")
+        } else {
+            let elem = self.q1.elements.remove(self.size-1);
+
+            self.size -= 1;
+            Ok(elem)
+        }
     }
+    pub fn pop2(&mut self) -> Result<T, &str> {
+        if let Ok(front) = self.q1.dequeue() {
+            self.size -= 1;
+            Ok(front)
+        } else {
+            Err("Stack is empty")
+        }
+    }
+
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+        // match self.size {
+        //     0 => true,
+        //     _ => false
+
+        // }
+        self.size == 0
     }
 }
 
